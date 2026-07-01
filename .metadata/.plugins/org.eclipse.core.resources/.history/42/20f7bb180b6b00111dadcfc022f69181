@@ -1,0 +1,5 @@
+package com.example.recommed.repository;
+import com.example.recommend.entity.ConversationSession;
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface ConversationSessionRepository extends JpaRepository<ConversationSession, String> {
+}

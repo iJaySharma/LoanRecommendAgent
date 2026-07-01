@@ -1,0 +1,33 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: car-loan-recommendation
+  datasource:
+    url: jdbc:h2:mem:recommend;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+llm:
+  provider: groq
+  api-key: ${LLM_API_KEY:}
+  base-url: https://api.groq.com/openai/v1
+  model: llama-3.1-8b-instant
+logging:
+  level:
+    org.springframework.web.client.RestTemplate: DEBUG

@@ -1,0 +1,29 @@
+package com.example.recommend.llm;
+
+import java.util.List;
+public interface LlmClient {
+    /**
+     * Send a chat completion request and return the assistant's text reply.
+     */
+    String chat(String systemPrompt, List<ChatTurn> history);
+    record ChatTurn(String role, String content) {}
+    
+    class ChatTurn {
+
+        private String role;
+        private String content;
+
+        public ChatTurn(String role, String content) {
+            this.role = role;
+            this.content = content;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public String getContent() {
+            return content;
+        }
+    }
+}

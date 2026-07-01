@@ -1,0 +1,28 @@
+package com.example.recommend.dto;
+public class LoanRecommendation {
+    private String bankName;
+    private double interestRate;
+    private int tenureMonths;
+    private double loanAmount;
+    private double emi;
+    private double totalInterest;
+    private double processingFee;
+    private String rationale;
+    public LoanRecommendation() {}
+    public String getBankName() { return bankName; }
+    public void setBankName(String bankName) { this.bankName = bankName; }
+    public double getInterestRate() { return interestRate; }
+    public void setInterestRate(double interestRate) { this.interestRate = interestRate; }
+    public int getTenureMonths() { return tenureMonths; }
+    public void setTenureMonths(int tenureMonths) { this.tenureMonths = tenureMonths; }
+    public double getLoanAmount() { return loanAmount; }
+    public void setLoanAmount(double loanAmount) { this.loanAmount = loanAmount; }
+    public double getEmi() { return emi; }
+    public void setEmi(double emi) { this.emi = emi; }
+    public double getTotalInterest() { return totalInterest; }
+    public void setTotalInterest(double totalInterest) { this.totalInterest = totalInterest; }
+    public double getProcessingFee() { return processingFee; }
+    public void setProcessingFee(double processingFee) { this.processingFee = processingFee; }
+    public String getRationale() { return rationale; }
+    public void setRationale(String rationale) { this.rationale = rationale; }
+}

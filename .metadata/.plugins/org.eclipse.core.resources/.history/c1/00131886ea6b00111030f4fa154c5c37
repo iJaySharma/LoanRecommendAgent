@@ -1,0 +1,22 @@
+package com.example.recommend.controller;
+import com.example.recommend.agent.CarLoanAgent;
+import com.example.recommend.dto.ChatRequest;
+import com.example.recommend.dto.ChatResponse;
+import org.springframework.web.bind.annotation.*;
+@RestController
+@RequestMapping("/api/car-loan")
+@CrossOrigin
+public class CarLoanController {
+    private final CarLoanAgent agent;
+    public CarLoanController(CarLoanAgent agent) {
+        this.agent = agent;
+    }
+    @PostMapping("/chat")
+    public ChatResponse chat(@RequestBody ChatRequest req) {
+        return agent.handle(req.getSessionId(), req.getMessage());
+    }
+    @GetMapping("/health")
+    public String health() {
+        return "ok";
+    }
+}

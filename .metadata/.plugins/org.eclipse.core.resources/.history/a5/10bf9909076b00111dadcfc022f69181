@@ -1,0 +1,8 @@
+package com.example.recommend.repository;
+import com.example.recommend.entity.LoanOffer;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+public interface LoanOfferRepository extends JpaRepository<LoanOffer, Long> {
+    List<LoanOffer> findByMinCreditScoreLessThanEqualAndMaxLoanAmountGreaterThanEqual(
+        int creditScore, double loanAmount);
+}

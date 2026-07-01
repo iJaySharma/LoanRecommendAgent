@@ -1,0 +1,54 @@
+package com.example.recommend.service;
+import com.example.recommend.agent.UserProfile;
+import com.example.recommend.dto.LoanRecommendation;
+import com.example.recommend.entity.LoanOffer;
+import com.example.recommend.repository.LoanOfferRepository;
+import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+@Service
+public class RecommendationService {
+    private final LoanOfferRepository repo;
+    private final EmiCalculator emiCalculator;
+    public RecommendationService(LoanOfferRepository repo, EmiCalculator emiCalculator) {
+        this.repo = repo;
+        this.emiCalculator = emiCalculator;
+    }
+    public List<LoanRecommendation> recommend(UserProfile profile) {
+        double loanAmount = Math.max(0, profile.getCarPrice() - profile.getDownPayment());
+        int tenure = profile.getTenureMonths();
+        int creditScore = profile.getCreditScore() != null ? profile.getCreditScore() : 700;
+        List<LoanOffer> offers = repo
+            .findByMinCreditScoreLessThanEqualAndMaxLoanAmountGreaterThanEqual(creditScore, loanAmount);
+        List<LoanRecommendation> recs = new ArrayList<>();
+        for (LoanOffer o : offers) {
+            int t = Math.min(tenure, o.getMaxTenureMonths());
+            double emi = emiCalculator.computeEmi(loanAmount, o.getInterestRate(), t);
+            double totalInt = emiCalculator.totalInterest(emi, t, loanAmount);
+            double fee = loanAmount * o.getProcessingFeePct() / 100.0;
+            LoanRecommendation r = new LoanRecommendation();
+            r.setBankName(o.getBankName());
+            r.setInterestRate(o.getInterestRate());
+            r.setTenureMonths(t);
+            r.setLoanAmount(loanAmount);
+            r.setEmi(Math.round(emi));
+            r.setTotalInterest(Math.round(totalInt));
+            r.setProcessingFee(Math.round(fee));
+            StringBuilder why = new StringBuilder();
+            why.append(o.getBankName()).append(" offers ").append(o.getInterestRate()).append("% p.a. ");
+            if (profile.getPreferredEmi() != null && emi <= profile.getPreferredEmi()) {
+                why.append("EMI fits within your preferred budget. ");
+            } else if (profile.getPreferredEmi() != null) {
+                why.append("EMI is above your preferred budget; consider longer tenure. ");
+            }
+            if (profile.getMonthlyIncome() != null && emi > profile.getMonthlyIncome() * 0.4) {
+                why.append("Warning: EMI exceeds 40% of monthly income.");
+            }
+            r.setRationale(why.toString().trim());
+            recs.add(r);
+        }
+        recs.sort(Comparator.comparingDouble(LoanRecommendation::getEmi));
+        return recs;
+    }
+}

@@ -1,0 +1,28 @@
+package com.example.carloan.entity;
+import jakarta.persistence.*;
+import java.time.Instant;
+import java.util.UUID;
+@Entity
+@Table(name = "conversation_session")
+public class ConversationSession {
+    @Id
+    private String id = UUID.randomUUID().toString();
+    @Lob
+    @Column(name = "context_json", columnDefinition = "TEXT")
+    private String contextJson;
+    @Lob
+    @Column(name = "history_json", columnDefinition = "TEXT")
+    private String historyJson;
+    private Instant createdAt = Instant.now();
+    private Instant updatedAt = Instant.now();
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+    public String getContextJson() { return contextJson; }
+    public void setContextJson(String contextJson) { this.contextJson = contextJson; }
+    public String getHistoryJson() { return historyJson; }
+    public void setHistoryJson(String historyJson) { this.historyJson = historyJson; }
+    public Instant getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
+    public Instant getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
+}
